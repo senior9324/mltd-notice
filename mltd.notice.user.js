@@ -1,6 +1,8 @@
 // ==UserScript==
 // @name MLTD Notice
-// @version 0.1
+// @description 밀리시타 공지사항을 이쁘게 보이게 합니다.
+// @version 19020801
+// @author senior9324
 // @run-at document-idle
 // @match https://webview-dot-theaterdays.appspot.com/*
 // @grant GM_setClipboard
@@ -9,6 +11,7 @@
 // @grant GM.setClipboard
 // @grant GM.openInTab
 // @grant GM.xmlHttpRequest
+// @connect senior9324.github.io
 // @require https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @downloadURL https://senior9324.github.io/mltd-notice/mltd.notice.user.js
 // ==/UserScript==
