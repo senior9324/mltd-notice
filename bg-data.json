@@ -1,0 +1,15 @@
+{
+  "bgList": [
+    "http://imas.gamedbs.jp/mlth/image/card/bg/1524204991001_ygd895np.png",
+    "http://imas.gamedbs.jp/mlth/image/card/bg/1547964604001_i1s5ju0x.png",
+    "http://imas.gamedbs.jp/mlth/image/card/bg/1538546895001_7q81ksho.png",
+    "http://imas.gamedbs.jp/mlth/image/card/bg/1521526137002_6i8bp15c.png",
+    "http://imas.gamedbs.jp/mlth/image/card/bg/1545372667001_6u20n8lv.png",
+    "http://imas.gamedbs.jp/mlth/image/card/bg/1549087982001_5pjv72l6.png",
+    "http://imas.gamedbs.jp/mlth/image/card/bg/1540188595005_nbymk34u.png"
+  ],
+  "specialBg": {
+    "end": 1549799999999,
+    "bg": "http://imas.gamedbs.jp/mlth/image/card/bg/1549087982001_5pjv72l6.png"
+  }
+}
