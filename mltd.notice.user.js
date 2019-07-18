@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name MLTD Notice
 // @description 밀리시타 공지사항을 이쁘게 보이게 합니다.
-// @version 19071801
+// @version 19071803
 // @author senior9324
 // @run-at document-idle
 // @match https://webview-dot-theaterdays.appspot.com/*
