@@ -273,11 +273,11 @@
 
     document.body.appendChild(container)
   } else {
-    window.addEventListener('click', function (e) {
+    window.addEventListener('mousedown', function (e) {
       let target = searchParentLink(e.target)
 
       if (target && target.href.indexOf('browser:') === 0) {
-        target.setAttribute('_target', 'blank')
+        target.setAttribute('target', '_blank')
         target.href = target.href.substring(8)
       }
     })
