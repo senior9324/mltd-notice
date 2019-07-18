@@ -1,15 +1,13 @@
 // ==UserScript==
 // @name MLTD Notice
 // @description 밀리시타 공지사항을 이쁘게 보이게 합니다.
-// @version 19020801
+// @version 19071801
 // @author senior9324
 // @run-at document-idle
 // @match https://webview-dot-theaterdays.appspot.com/*
 // @grant GM_setClipboard
-// @grant GM_openInTab
 // @grant GM_xmlhttpRequest
 // @grant GM.setClipboard
-// @grant GM.openInTab
 // @grant GM.xmlHttpRequest
 // @connect senior9324.github.io
 // @require https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
@@ -242,8 +240,8 @@
     tablist.id = 'tablist'
     tablist.innerHTML = '' +
       '<li><a href="/info/google#/update" class="click" target="mainFrame"><span class="border"><span>Update</span></span></a></li>' +
-      '<li><a href="/info/google#/bug" target="mainFrame"><span class="border"><span>Bug</span></span></a></li>' +
-      '<li><a href="/info/google#/event" target="mainFrame"><span class="border"><span>Event</span></span></a></li>'
+      '<li><a href="/info/google#/event" target="mainFrame"><span class="border"><span>Event</span></span></a></li>' +
+      '<li><a href="/info/google#/bug" target="mainFrame"><span class="border"><span>Bug</span></span></a></li>'
     tablist.addEventListener('click', function (e) {
       let target = searchParentLink(e.target, tablist)
 
@@ -279,9 +277,8 @@
       let target = searchParentLink(e.target)
 
       if (target && target.href.indexOf('browser:') === 0) {
-        e.preventDefault()
-
-        GM.openInTab(target.href.substring(8))
+        target.setAttribute('_target', 'blank')
+        target.href = target.href.substring(8)
       }
     })
 
