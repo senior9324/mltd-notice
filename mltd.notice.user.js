@@ -1,23 +1,72 @@
 // ==UserScript==
 // @name MLTD Notice
-// @description 밀리시타 공지사항을 이쁘게 보이게 합니다.
-// @version 19071803
+// @description Prettify MLTD Notice Page.
+// @version 19121601
 // @author senior9324
 // @run-at document-idle
 // @match https://webview-dot-theaterdays.appspot.com/*
+// @match https://webview-dot-theaterdays-ko.appspot.com/*
+// @match https://webview-dot-theaterdays-zh.appspot.com/*
 // @grant GM_setClipboard
 // @grant GM_xmlhttpRequest
+// @grant GM_setValue
+// @grant GM_getValue
 // @grant GM.setClipboard
 // @grant GM.xmlHttpRequest
+// @grant GM.setValue
+// @grant GM.getValue
 // @connect senior9324.github.io
 // @require https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 // @downloadURL https://senior9324.github.io/mltd-notice/mltd.notice.user.js
 // ==/UserScript==
 
 (async function() {
+  const i18n = {
+    lang: {
+      ja: '日本語',
+      en: 'English',
+      ko: '한국어',
+      zh: '中文 (繁體)'
+    },
+    data: {
+      ja: {
+        title: 'お知らせ',
+        update: '更新情報',
+        event: '開催情報',
+        bug: '不具合情報',
+        share: '共有',
+        linkCopied: 'リンクをクリップボードにコピーしました'
+      },
+      en: {
+        title: 'Notice',
+        update: 'Update',
+        event: 'Event',
+        bug: 'Bug',
+        share: 'Share',
+        linkCopied: 'Link copied to clipboard'
+      },
+      ko: {
+        title: '공지사항',
+        update: '갱신 정보',
+        event: '진행 정보',
+        bug: '오류 정보',
+        share: '공유',
+        linkCopied: '링크를 클립보드에 복사했습니다'
+      },
+      zh: {
+        title: '公告',
+        update: '更新資訊',
+        event: '舉辦資訊',
+        bug: '問題資訊',
+        share: '分享',
+        linkCopied: '已將連結複製到剪貼簿'
+      }
+    }
+  }
+
   function doXHR(data) {
     if (data.onload || data.onerror) {
-      throw new Error('이 함수를 callback 패턴으로 쓰지 마세요.')
+      throw new Error('Do not use callback pattern to call this function.')
     } else {
       return new Promise((resolve, reject) => {
         GM.xmlHttpRequest(Object.assign(
@@ -60,10 +109,6 @@
   function removeAttributes(elem) {
     while (elem.attributes.length > 0)
       elem.removeAttribute(elem.attributes[0].name)
-  }
-
-  async function getMainStylesheet() {
-
   }
 
   let stylesheet = `
@@ -173,12 +218,17 @@
     background: white;
   }
 
-  .sharebtn {
+  .mltdsharebtn {
     float: right;
     display: inline-block;
     padding: 10px 20px;
     color: black;
     text-decoration: none;
+  }
+
+  .changelang {
+    float: right;
+    margin: 12px 0;
   }
 
   iframe {
@@ -192,6 +242,8 @@
   `
 
   if (unsafeWindow === unsafeWindow.parent) {
+    let langCode = await GM.getValue('lang', 'ja')
+
     let intendedPage = location.pathname + location.hash
 
     if (!intendedPage.includes('info/google#') && !intendedPage.includes('info/apple#')) {
@@ -206,10 +258,10 @@
     removeAttributes(document.body)
     removeAttributes(document.documentElement)
 
-    history.replaceState(null, 'お知らせ', '/')
+    history.replaceState(null, i18n.data[langCode].title, '/')
 
     let browserTitle = document.createElement('title')
-    browserTitle.textContent = 'お知らせ'
+    browserTitle.textContent = i18n.data[langCode].title
     document.head.appendChild(browserTitle)
 
     let style = document.createElement('style')
@@ -233,24 +285,29 @@
     let header = document.createElement('header')
 
     let title = document.createElement('h1')
-    title.textContent = 'お知らせ'
+    title.textContent = i18n.data[langCode].title
     header.appendChild(title)
 
     let tablist = document.createElement('ul')
     tablist.id = 'tablist'
-    tablist.innerHTML = '' +
-      '<li><a href="/info/google#/update" class="click" target="mainFrame"><span class="border"><span>Update</span></span></a></li>' +
-      '<li><a href="/info/google#/event" target="mainFrame"><span class="border"><span>Event</span></span></a></li>' +
-      '<li><a href="/info/google#/bug" target="mainFrame"><span class="border"><span>Bug</span></span></a></li>'
+    tablist.innerHTML = (function() {
+      const tabtypelist = ['update', 'event', 'bug']
+      let result = ''
+      for (const tabtype of tabtypelist) {
+        result += `<li><a data-tab="${tabtype}" ${(intendedPage.includes(tabtype) ? 'class="click" ': '')}href="/info/google#/${tabtype}" target="mainFrame"><span class="border"><span>${i18n.data[langCode][tabtype]}</span></span></a></li>`
+      }
+      return result
+    })()
+
     tablist.addEventListener('click', function (e) {
       let target = searchParentLink(e.target, tablist)
 
       if (target) {
-        if (target.className === 'click') {
+        if (target.classList.contains('click')) {
           e.preventDefault();
         } else {
-          tablist.querySelector('a.click').className = ''
-          target.className = 'click'
+          tablist.querySelector('a.click').classList.remove('click')
+          target.classList.add('click')
         }
       }
     })
@@ -258,15 +315,40 @@
     header.appendChild(tablist)
 
     let share = document.createElement('a')
-    share.className = 'sharebtn'
-    share.innerHTML = 'Share'
+    share.className = 'mltdsharebtn'
+    share.textContent = i18n.data[langCode].share
     share.href = '#'
     share.addEventListener('click', function (e) {
       e.preventDefault()
       GM.setClipboard(iframe.contentWindow.location.href)
-      alert('복사가 완료되었습니다.')
+      alert(i18n.data[langCode].linkCopied)
     })
     header.appendChild(share)
+
+    let changeLang = document.createElement('select')
+    changeLang.className = 'changelang'
+    changeLang.innerHTML = (function () {
+      let option = ''
+      for (const [lang, name] of Object.entries(i18n.lang)) {
+        option += `<option value="${lang}"${(lang === langCode) ? ' selected': ''}>${name}</option>`
+      }
+      return option
+    })()
+    changeLang.addEventListener('change', async function () {
+      await GM.setValue('lang', this.value)
+
+      langCode = this.value
+
+      browserTitle.textContent = i18n.data[langCode].title
+      title.textContent = i18n.data[langCode].title
+
+      for (const tab of tablist.querySelectorAll('a[target=mainFrame]')) {
+        tab.innerHTML = `<span class="border"><span>${i18n.data[langCode][tab.dataset.tab]}</span></span>`
+      }
+
+      share.textContent = i18n.data[langCode].share
+    })
+    header.appendChild(changeLang)
 
     container.appendChild(header)
     container.appendChild(iframe)
