@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name MLTD Notice
 // @description Prettify MLTD Notice Page.
-// @version 19121601
+// @version 19121602
 // @author senior9324
 // @run-at document-idle
 // @match https://webview-dot-theaterdays.appspot.com/*
@@ -228,7 +228,7 @@
 
   .changelang {
     float: right;
-    margin: 12px 0;
+    margin: 11.8px 0;
   }
 
   iframe {
