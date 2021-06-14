@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name MLTD Notice
 // @description Prettify MLTD Notice Page.
-// @version 19121602
+// @version 21061401
 // @author senior9324
 // @run-at document-idle
 // @match https://webview-dot-theaterdays.appspot.com/*
@@ -166,6 +166,7 @@
   }
 
   header {
+    display: flex;
     background-image: linear-gradient(#feea8b, #dbc877, #c4b36b);
     border-radius: 30px 30px 0 0;
     -webkit-user-select: none;
@@ -173,14 +174,13 @@
   }
 
   header h1 {
-    float: left;
     margin: 0;
     padding: 10px 20px;
     font-size: 16px;
   }
 
   #tablist {
-    float: left;
+    flex: 1;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -219,7 +219,6 @@
   }
 
   .mltdsharebtn {
-    float: right;
     display: inline-block;
     padding: 10px 20px;
     color: black;
@@ -227,8 +226,7 @@
   }
 
   .changelang {
-    float: right;
-    margin: 11.8px 0;
+    margin: auto;
   }
 
   iframe {
@@ -314,17 +312,6 @@
 
     header.appendChild(tablist)
 
-    let share = document.createElement('a')
-    share.className = 'mltdsharebtn'
-    share.textContent = i18n.data[langCode].share
-    share.href = '#'
-    share.addEventListener('click', function (e) {
-      e.preventDefault()
-      GM.setClipboard(iframe.contentWindow.location.href)
-      alert(i18n.data[langCode].linkCopied)
-    })
-    header.appendChild(share)
-
     let changeLang = document.createElement('select')
     changeLang.className = 'changelang'
     changeLang.innerHTML = (function () {
@@ -349,6 +336,17 @@
       share.textContent = i18n.data[langCode].share
     })
     header.appendChild(changeLang)
+
+    let share = document.createElement('a')
+    share.className = 'mltdsharebtn'
+    share.textContent = i18n.data[langCode].share
+    share.href = '#'
+    share.addEventListener('click', function (e) {
+      e.preventDefault()
+      GM.setClipboard(iframe.contentWindow.location.href)
+      alert(i18n.data[langCode].linkCopied)
+    })
+    header.appendChild(share)
 
     container.appendChild(header)
     container.appendChild(iframe)
